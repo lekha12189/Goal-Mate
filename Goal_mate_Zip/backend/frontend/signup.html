@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - GoalMate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .glass-effect { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
+    <header class="bg-slate-900 md:backdrop-blur-lg md:bg-white/10 border-b border-white/20 shadow-lg rounded-b-2xl px-6 py-4 flex items-center justify-between relative z-20">
+        <div class="text-3xl font-extrabold gradient-text tracking-tight">
+            <a href="#" class="flex items-center space-x-2">
+              <img src="assets/images/GoalMate_Logo.jpg" alt="GoalMate Logo" class="w-10 h-10 rounded-full shadow-md border-2 border-purple-400/60" />
+              <span>GoalMate</span>
+            </a>
+          </div>
+    </header>
+    <main class="container mx-auto px-4 py-20">
+        <div class="max-w-md mx-auto">
+            <h1 class="text-4xl font-bold text-center text-white mb-6">Sign Up</h1>
+            <div class="bg-gray-800 p-8 rounded-lg shadow-lg glass-effect">
+                <form class="space-y-6" id="signupForm">
+                    <div>
+                        <label for="name" class="block text-lg text-white mb-2">Name</label>
+                        <input type="text" id="name" name="name" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your name" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-lg text-white mb-2">Email</label>
+                        <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your email" required>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-lg text-white mb-2">Password</label>
+                        <input type="password" id="password" name="password" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500" placeholder="Create a password" required>
+                    </div>
+                    <button type="submit" id="signupBtn" class="w-full px-6 py-3 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700 transition duration-300">Sign Up &rarr;</button>
+                </form>
+                <div id="error" class="text-red-500 mt-4"></div>
+                <p class="text-center text-gray-400 mt-6">Already have an account? <a href="login.html" class="text-blue-400 hover:underline">Login</a></p>
+            </div>
+        </div>
+
+        <script>
+          document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorBox = document.getElementById('error');
+            errorBox.textContent = '';
+
+            if (!name || !email || !password) {
+              errorBox.textContent = 'Please fill all fields';
+              return;
+            }
+
+            try {
+              const res = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+              });
+              const data = await res.json();
+
+              if (res.ok) {
+                alert('Signup successful! Please login.');
+                window.location.href = '/login.html';
+              } else {
+                errorBox.textContent = data.message || 'Signup failed';
+              }
+            } catch {
+              errorBox.textContent = 'Server error. Please try again.';
+            }
+          });
+        </script>
+    </main>
+
+    <footer class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white py-12 px-4 mt-16 border-t border-white/10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 items-start">
+            <div class="flex flex-col items-center md:items-start space-y-4">
+                <div class="flex items-center space-x-3">
+                    <img src="assets/images/GoalMate_Logo.jpg" alt="GoalMate Logo" class="w-12 h-12 rounded-full border-2 border-purple-400/60 shadow-md" />
+                    <span class="text-2xl font-extrabold gradient-text tracking-tight">GoalMate</span>
+                </div>
+                <p class="text-gray-300 text-sm max-w-xs text-center md:text-left">GoalMate helps you and your friends stay motivated with collaborative learning goals. Set tasks, track progress, and celebrate achievements together!</p>
+            </div>
+            <div class="flex flex-col space-y-2 items-center md:items-start">
+                <h4 class="font-semibold text-lg mb-2 text-purple-300">Quick Links</h4>
+                <a href="index.html" class="hover:text-purple-300 transition-colors">Home</a>
+                <a href="join.html" class="hover:text-purple-300 transition-colors">Join Room</a>
+                <a href="create_room.html" class="hover:text-purple-300 transition-colors">Create Room</a>
+                <a href="goals.html" class="hover:text-purple-300 transition-colors">Goals</a>
+                <a href="streaks.html" class="hover:text-purple-300 transition-colors">Streaks</a>
+                <a href="timeline.html" class="hover:text-purple-300 transition-colors">Timeline</a>
+            </div>
+            <div class="flex flex-col space-y-2 items-center md:items-start">
+                <h4 class="font-semibold text-lg mb-2 text-purple-300">Follow Us</h4>
+                <div class="flex space-x-4 mt-1">
+                    <a href="#" aria-label="Twitter" class="hover:text-blue-400 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.59-2.47.7a4.3 4.3 0 001.88-2.37 8.59 8.59 0 01-2.72 1.04A4.28 4.28 0 0016.11 4c-2.37 0-4.29 1.92-4.29 4.29 0 .34.04.67.11.99C7.69 9.13 4.07 7.38 1.64 4.7c-.37.64-.58 1.38-.58 2.17 0 1.5.76 2.82 1.92 3.6-.7-.02-1.36-.21-1.94-.53v.05c0 2.1 1.5 3.85 3.5 4.25-.36.1-.74.16-1.13.16-.28 0-.54-.03-.8-.08.54 1.7 2.1 2.94 3.95 2.97A8.6 8.6 0 012 19.54c-.29 0-.57-.02-.85-.05A12.13 12.13 0 007.29 21.5c7.55 0 11.68-6.26 11.68-11.68 0-.18-.01-.36-.02-.54A8.18 8.18 0 0024 5.1a8.36 8.36 0 01-2.54.7z"/></svg>
+                    </a>
+                    <a href="#" aria-label="Instagram" class="hover:text-pink-400 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zm4.25 3.25a5.25 5.25 0 110 10.5 5.25 5.25 0 010-10.5zm0 1.5a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5zm6.13.88a1.13 1.13 0 11-2.25 0 1.13 1.13 0 012.25 0z"/></svg>
+                    </a>
+                    <a href="#" aria-label="LinkedIn" class="hover:text-blue-300 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.28c-.97 0-1.75-.79-1.75-1.75s.78-1.75 1.75-1.75 1.75.78 1.75 1.75-.78 1.75-1.75 1.75zm13.5 10.28h-3v-4.5c0-1.08-.02-2.47-1.5-2.47-1.5 0-1.73 1.17-1.73 2.39v4.58h-3v-9h2.88v1.23h.04c.4-.75 1.38-1.54 2.84-1.54 3.04 0 3.6 2 3.6 4.59v4.72z"/></svg>
+                    </a>
+                </div>
+            </div>
+            <div class="flex flex-col space-y-2 items-center md:items-start">
+                <h4 class="font-semibold text-lg mb-2 text-purple-300">Contact Us</h4>
+                <span class="text-gray-300 text-sm">Email: <a href="mailto:support@goalmate.com" class="hover:text-purple-300 no-underline">support@goalmate.com</a></span>
+                <span class="text-gray-300 text-sm">Phone: <a href="tel:+1234567890" class="hover:text-purple-300 no-underline">+1 234 567 890</a></span>
+            </div>
+        </div>
+        <div class="mt-10 border-t border-white/10 pt-6 text-center text-gray-400 text-xs flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6">
+            <span>&copy; 2025 GoalMate. All rights reserved.</span>
+            <span class="hidden md:inline">|</span>
+            <a href="#" class="hover:text-purple-300 hover:underline transition-colors no-underline">Terms &amp; Conditions</a>
+            <span class="hidden md:inline">|</span>
+            <a href="#" class="hover:text-purple-300 hover:underline transition-colors no-underline">Privacy Policy</a>
+        </div>
+    </footer>
+</body>
+</html>

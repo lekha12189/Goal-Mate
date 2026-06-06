@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeline - GoalMate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .gradient-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .timeline-card {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(0);
+    }
+    
+    .timeline-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    
+    .floating-icon {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(5deg); }
+    }
+    
+    .pulse-glow {
+        animation: pulse-glow 2s infinite;
+    }
+    
+    @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+    }
+    
+    .stagger-fade {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: stagger-fade 0.8s ease-out forwards;
+    }
+    
+    @keyframes stagger-fade {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .timeline-card:nth-child(1) { animation-delay: 0.1s; }
+    .timeline-card:nth-child(2) { animation-delay: 0.2s; }
+    .timeline-card:nth-child(3) { animation-delay: 0.3s; }
+    .timeline-card:nth-child(4) { animation-delay: 0.4s; }
+    .timeline-card:nth-child(5) { animation-delay: 0.5s; }
+    
+    .gradient-border {
+        position: relative;
+        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
+        padding: 2px;
+        border-radius: 20px;
+    }
+    
+    .gradient-border-inner {
+        background: #0f0f23;
+        border-radius: 18px;
+        height: 100%;
+        width: 100%;
+    }
+    
+    .morphism-bg {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.18);
+    }
+    
+    .timeline-line {
+        position: absolute;
+        left: 2rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(180deg, #667eea, #764ba2, #f093fb);
+        z-index: 1;
+    }
+    
+    .timeline-dot {
+        position: absolute;
+        left: 1.5rem;
+        top: 2rem;
+        width: 1rem;
+        height: 1rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        border: 3px solid #0f0f23;
+        z-index: 2;
+        animation: pulse-glow 2s infinite;
+    }
+    
+    .timeline-content {
+        margin-left: 4rem;
+        position: relative;
+        z-index: 3;
+    }
+    
+    .achievement-badge {
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .streak-badge {
+        background: linear-gradient(135deg, #ff6b6b, #ffa500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .goal-badge {
+        background: linear-gradient(135deg, #4ade80, #22c55e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .collaboration-badge {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
+  <!-- Header Include Start -->
+  <header class="bg-slate-900 md:backdrop-blur-lg md:bg-white/10 border-b border-white/20 shadow-lg rounded-b-2xl px-6 py-4 flex items-center justify-between relative z-20">
+    <!-- Logo -->
+    <div class="text-3xl font-extrabold gradient-text tracking-tight">
+        <a href="#" class="flex items-center space-x-2">
+          <img src="assets/images/GoalMate_Logo.jpg" alt="GoalMate Logo" class="w-10 h-10 rounded-full shadow-md border-2 border-purple-400/60" />
+          <span>GoalMate</span>
+        </a>
+      </div>
+  
+    <!-- Hamburger Button (Mobile) -->
+    <button id="mobile-menu-btn" class="md:hidden p-2 rounded text-white border border-purple-400 hover:bg-purple-500/20 focus:outline-none" aria-label="Open Menu">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  
+    <!-- Navigation (Desktop Only) -->
+    <nav class="hidden md:flex items-center space-x-8">
+      <a href="index.html" class="text-lg font-medium hover:text-purple-300 text-white transition">Home</a>
+      <a href="join.html" class="text-lg font-medium hover:text-purple-300 text-white transition">Join Room</a>
+      <a href="create_room.html" class="text-lg font-medium hover:text-purple-300 text-white transition">Create Room</a>
+  
+      <!-- Profile Dropdown -->
+      <div class="relative group">
+        <button id="profile-menu-btn" class="focus:outline-none w-10 h-10 rounded-full hover:bg-purple-500/20 flex items-center justify-center transition" aria-label="Open Profile Menu">
+          <svg class="w-7 h-7 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.7 0 4.5-1.8 4.5-4.5S14.7 3 12 3 7.5 4.8 7.5 7.5 9.3 12 12 12zm0 2c-3 0-9 1.5-9 4.5V21h18v-2.5c0-3-6-4.5-9-4.5z"/>
+          </svg>
+        </button>
+        <div id="profile-dropdown" class="absolute right-0 mt-3 w-48 bg-white text-gray-900 rounded-xl shadow-2xl border border-purple-200/40 opacity-0 invisible transition-all duration-200 z-30 md:backdrop-blur-md">
+          <a href="account.html" class="block px-6 py-3 hover:bg-purple-50 rounded-t-xl transition">Account</a>
+          <a href="goals.html" class="block px-6 py-3 hover:bg-purple-50 transition">Goals</a>
+          <a href="streaks.html" class="block px-6 py-3 hover:bg-purple-50 transition">Streaks</a>
+          <a href="timeline.html" class="block px-6 py-3 hover:bg-purple-50 rounded-b-xl transition">Timeline</a>
+        </div>
+      </div>
+    </nav>
+  
+    <!-- Mobile Menu -->
+    <div id="mobile-nav" class="md:hidden fixed top-0 left-0 w-full h-full bg-slate-900 z-40 flex flex-col items-center justify-center space-y-8 text-center text-white text-xl font-semibold transition-all duration-300 opacity-0 pointer-events-none">
+      <button id="close-mobile-menu" class="absolute top-6 right-8 text-4xl focus:outline-none">&times;</button>
+      <a href="index.html" class="hover:text-purple-300 transition">Home</a>
+      <a href="join.html" class="hover:text-purple-300 transition">Join Room</a>
+      <a href="create_room.html" class="hover:text-purple-300 transition">Create Room</a>
+      <div>
+        <button id="mobile-dropdown-btn" class="hover:text-purple-300 focus:outline-none flex items-center justify-center transition">Menu <span class="ml-1">▾</span></button>
+        <div id="mobile-dropdown" class="hidden flex-col mt-2 bg-white text-gray-900 rounded-xl shadow-2xl border border-purple-200/40 w-48 mx-auto">
+          <a href="account.html" class="block px-6 py-3 hover:bg-purple-50 rounded-t-xl transition">Account</a>
+          <a href="goals.html" class="block px-6 py-3 hover:bg-purple-50 transition">Goals</a>
+          <a href="streaks.html" class="block px-6 py-3 hover:bg-purple-50 transition">Streaks</a>
+          <a href="timeline.html" class="block px-6 py-3 hover:bg-purple-50 rounded-b-xl transition">Timeline</a>
+        </div>
+      </div>
+    </div>
+  
+    <!-- JavaScript -->
+    <script>
+      const profileMenuBtn = document.getElementById('profile-menu-btn');
+      const profileDropdown = document.getElementById('profile-dropdown');
+      const mobileNav = document.getElementById('mobile-nav');
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const closeMobileBtn = document.getElementById('close-mobile-menu');
+      const mobileDropdownBtn = document.getElementById('mobile-dropdown-btn');
+      const mobileDropdown = document.getElementById('mobile-dropdown');
+  
+      profileMenuBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('opacity-0');
+        profileDropdown.classList.toggle('invisible');
+      });
+      document.addEventListener('click', () => {
+        if (!profileDropdown.classList.contains('invisible')) {
+          profileDropdown.classList.add('opacity-0', 'invisible');
+        }
+      });
+      profileDropdown?.addEventListener('click', (e) => e.stopPropagation());
+  
+      mobileMenuBtn?.addEventListener('click', () => {
+        mobileNav.classList.remove('opacity-0', 'pointer-events-none');
+        mobileNav.classList.add('opacity-100', 'pointer-events-auto');
+      });
+      closeMobileBtn?.addEventListener('click', () => {
+        mobileNav.classList.remove('opacity-100', 'pointer-events-auto');
+        mobileNav.classList.add('opacity-0', 'pointer-events-none');
+      });
+  
+      mobileDropdownBtn?.addEventListener('click', () => {
+        mobileDropdown.classList.toggle('hidden');
+      });
+    </script>
+  </header>
+  <!-- Header Include End -->
+  
+  <main class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Header Section -->
+    <div class="text-center mb-12">
+      <div class="inline-block mb-6">
+        <span class="px-4 py-2 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 rounded-full text-indigo-300 text-sm font-medium backdrop-blur-sm">
+          📅 Your Learning Journey
+        </span>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold gradient-text mb-4">Your Timeline</h1>
+      <p class="text-xl text-gray-300 max-w-2xl mx-auto">Track your progress and celebrate your achievements with a beautiful chronological view</p>
+    </div>
+    
+    <!-- Timeline Container -->
+    <div class="relative">
+      <!-- Timeline Line -->
+      <div class="timeline-line"></div>
+      
+      <!-- Timeline Items -->
+      <div class="space-y-8">
+        <!-- Timeline Item 1 -->
+        <div class="timeline-card stagger-fade relative">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="gradient-border">
+              <div class="gradient-border-inner p-6">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center floating-icon">
+                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-sm text-gray-400">May 25</div>
+                      <h3 class="text-xl font-bold text-white goal-badge">Completed Programming Assignment</h3>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-gray-300 leading-relaxed">Implemented the sorting algorithm successfully and submitted the assignment on time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Timeline Item 2 -->
+        <div class="timeline-card stagger-fade relative">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="gradient-border">
+              <div class="gradient-border-inner p-6">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center floating-icon">
+                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-sm text-gray-400">May 22</div>
+                      <h3 class="text-xl font-bold text-white streak-badge">Reached 10-Day Streak</h3>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-gray-300 leading-relaxed">Consistently studied for 10 days in a row, building strong learning habits.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Timeline Item 3 -->
+        <div class="timeline-card stagger-fade relative">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="gradient-border">
+              <div class="gradient-border-inner p-6">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center floating-icon">
+                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-sm text-gray-400">May 19</div>
+                      <h3 class="text-xl font-bold text-white achievement-badge">Earned "Weekend Warrior" Badge</h3>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-gray-300 leading-relaxed">Completed study goals on 3 consecutive weekends, showing dedication and consistency.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Timeline Item 4 -->
+        <div class="timeline-card stagger-fade relative">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="gradient-border">
+              <div class="gradient-border-inner p-6">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center floating-icon">
+                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-sm text-gray-400">May 13</div>
+                      <h3 class="text-xl font-bold text-white collaboration-badge">Joined "Physics Study Group"</h3>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-gray-300 leading-relaxed">Collaborated with 3 other students to form a study group for advanced physics concepts.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Timeline Item 5 -->
+        <div class="timeline-card stagger-fade relative">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="gradient-border">
+              <div class="gradient-border-inner p-6">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center floating-icon">
+                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-sm text-gray-400">May 9</div>
+                      <h3 class="text-xl font-bold text-white goal-badge">Completed Literature Review</h3>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-gray-300 leading-relaxed">Analyzed 5 research papers and compiled comprehensive notes for the research project.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+   <!-- Footer Start -->
+   <footer class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white py-12 px-4 mt-16 border-t border-white/10">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 items-start">
+      <!-- Logo & Description -->
+      <div class="flex flex-col items-center md:items-start space-y-4">
+        <div class="flex items-center space-x-3">
+          <img src="assets/images/GoalMate_Logo.jpg" alt="GoalMate Logo" class="w-12 h-12 rounded-full border-2 border-purple-400/60 shadow-md" />
+          <span class="text-2xl font-extrabold gradient-text tracking-tight">GoalMate</span>
+        </div>
+        <p class="text-gray-300 text-sm max-w-xs text-center md:text-left">GoalMate helps you and your friends stay motivated with collaborative learning goals. Set tasks, track progress, and celebrate achievements together!</p>
+      </div>
+      <!-- Quick Links -->
+      <div class="flex flex-col space-y-2 items-center md:items-start">
+        <h4 class="font-semibold text-lg mb-2 text-purple-300">Quick Links</h4>
+        <a href="index.html" class="hover:text-purple-300 transition-colors">Home</a>
+        <a href="join.html" class="hover:text-purple-300 transition-colors">Join Room</a>
+        <a href="create_room.html" class="hover:text-purple-300 transition-colors">Create Room</a>
+        <a href="goals.html" class="hover:text-purple-300 transition-colors">Goals</a>
+        <a href="streaks.html" class="hover:text-purple-300 transition-colors">Streaks</a>
+        <a href="timeline.html" class="hover:text-purple-300 transition-colors">Timeline</a>
+      </div>
+      <!-- Social Links -->
+      <div class="flex flex-col space-y-2 items-center md:items-start">
+        <h4 class="font-semibold text-lg mb-2 text-purple-300">Follow Us</h4>
+        <div class="flex space-x-4 mt-1">
+          <a href="#" aria-label="Twitter" class="hover:text-blue-400 transition-colors">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.59-2.47.7a4.3 4.3 0 001.88-2.37 8.59 8.59 0 01-2.72 1.04A4.28 4.28 0 0016.11 4c-2.37 0-4.29 1.92-4.29 4.29 0 .34.04.67.11.99C7.69 9.13 4.07 7.38 1.64 4.7c-.37.64-.58 1.38-.58 2.17 0 1.5.76 2.82 1.92 3.6-.7-.02-1.36-.21-1.94-.53v.05c0 2.1 1.5 3.85 3.5 4.25-.36.1-.74.16-1.13.16-.28 0-.54-.03-.8-.08.54 1.7 2.1 2.94 3.95 2.97A8.6 8.6 0 012 19.54c-.29 0-.57-.02-.85-.05A12.13 12.13 0 007.29 21.5c7.55 0 11.68-6.26 11.68-11.68 0-.18-.01-.36-.02-.54A8.18 8.18 0 0024 5.1a8.36 8.36 0 01-2.54.7z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="hover:text-pink-400 transition-colors">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zm4.25 3.25a5.25 5.25 0 110 10.5 5.25 5.25 0 010-10.5zm0 1.5a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5zm6.13.88a1.13 1.13 0 11-2.25 0 1.13 1.13 0 012.25 0z"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn" class="hover:text-blue-300 transition-colors">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.28c-.97 0-1.75-.79-1.75-1.75s.78-1.75 1.75-1.75 1.75.78 1.75 1.75-.78 1.75-1.75 1.75zm13.5 10.28h-3v-4.5c0-1.08-.02-2.47-1.5-2.47-1.5 0-1.73 1.17-1.73 2.39v4.58h-3v-9h2.88v1.23h.04c.4-.75 1.38-1.54 2.84-1.54 3.04 0 3.6 2 3.6 4.59v4.72z"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Contact Us -->
+      <div class="flex flex-col space-y-2 items-center md:items-start">
+        <h4 class="font-semibold text-lg mb-2 text-purple-300">Contact Us</h4>
+        <span class="text-gray-300 text-sm">Email: <a href="mailto:support@goalmate.com" class="hover:text-purple-300 no-underline">support@goalmate.com</a></span>
+        <span class="text-gray-300 text-sm">Phone: <a href="tel:+1234567890" class="hover:text-purple-300 no-underline">+1 234 567 890</a></span>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-white/10 pt-6 text-center text-gray-400 text-xs flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6">
+      <span>&copy; 2025 GoalMate. All rights reserved.</span>
+      <span class="hidden md:inline">|</span>
+      <a href="#" class="hover:text-purple-300 hover:underline transition-colors no-underline">Terms &amp; Conditions</a>
+      <span class="hidden md:inline">|</span>
+      <a href="#" class="hover:text-purple-300 hover:underline transition-colors no-underline">Privacy Policy</a>
+    </div>
+  </footer>
+  <!-- Footer End -->
+</body>
+</html> 

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GoalMate Study Room - Code Editor</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: url('assets/images/BG.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .container {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    flex: 1;
+    overflow: hidden;
+  }
+  .editor-section {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  select, button {
+    background-color: rgba(59,0,102,0.8);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+  select:hover, button:hover {
+    background-color: rgba(85,0,153,0.8);
+  }
+  textarea {
+    flex: 1;
+    background-color: rgba(30,0,51,0.8);
+    color: #fff;
+    border: none;
+    resize: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-family: monospace;
+    font-size: 15px;
+    outline: none;
+    backdrop-filter: blur(4px);
+  }
+  .right-section {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-left: 2px solid rgba(78,0,127,0.7);
+  }
+  .output-box {
+    flex: 1;
+    background-color: rgba(30,0,51,0.8);
+    border-radius: 10px;
+    padding: 15px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    backdrop-filter: blur(4px);
+  }
+  .chatbox {
+    background-color: rgba(46,0,80,0.8);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+    backdrop-filter: blur(4px);
+  }
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+  }
+  .chat-input {
+    display: flex;
+  }
+  .chat-input input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    margin-right: 10px;
+    font-family: "Poppins", sans-serif;
+    background-color: rgba(59,0,102,0.5);
+    color: #fff;
+    backdrop-filter: blur(4px);
+  }
+  .chat-input button {
+    background-color: rgba(106,13,173,0.8);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+  .chat-input button:hover {
+    background-color: rgba(138,43,226,0.8);
+  }
+</style>
+</head>
+<body>
+<header class="bg-slate-900 md:backdrop-blur-lg md:bg-white/10 border-b border-white/20 shadow-lg rounded-b-2xl px-6 py-4 flex items-center justify-between relative z-20">
+<div class="text-3xl font-extrabold gradient-text tracking-tight">
+GoalMate - <span id="room-name">Room</span>
+</div>
+<button id="close-room-btn" style="display:none; background-color: rgba(200,0,0,0.8); color:#fff; padding:8px 12px; border:none; border-radius:8px;">Close Room</button>
+</header>
+<div class="container">
+<section class="editor-section">
+<div class="controls">
+<select id="language">
+<option value="71">Python</option>
+<option value="50">C</option>
+<option value="54">C++</option>
+<option value="62">Java</option>
+</select>
+<button onclick="runCode()">Run Code</button>
+</div>
+<textarea id="code" placeholder="// Write your code here..."></textarea>
+</section>
+<section class="right-section">
+<div class="output-box glass-effect" id="output">Output will appear here...</div>
+<div class="chatbox glass-effect">
+<div class="chat-messages" id="chat-messages"></div>
+<div class="chat-input">
+<input type="text" id="chat-input" placeholder="Type a message..." />
+<button id="send-chat-btn">Send</button>
+</div>
+</div>
+</section>
+</div>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script>
+  const socket = io();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const roomId = urlParams.get('room_id');
+  const roomNameText = urlParams.get('room_name');
+  if (roomNameText) {
+    document.getElementById('room-name').textContent = roomNameText;
+  }
+
+  let currentUserId = null;
+
+  async function getCurrentUserId() {
+    const res = await fetch('/api/auth/session_test');
+    if (res.ok) {
+      const data = await res.json();
+      currentUserId = data.user_id;
+    }
+  }
+
+  getCurrentUserId();
+
+  socket.emit('join_room', { room: roomId });
+
+  socket.on('user_joined', (data) => {
+    addChatMessage('System', data.msg);
+  });
+  socket.on('user_left', (data) => {
+    addChatMessage('System', data.msg);
+  });
+  socket.on('receive_message', (data) => {
+    addChatMessage(data.user, data.message);
+  });
+  socket.on('receive_code', (data) => {
+    document.getElementById('code').value = data.code;
+  });
+  socket.on('receive_output', (data) => {
+    document.getElementById('output').textContent = data.output;
+  });
+  socket.on('room_closed', (data) => {
+    alert('Room has been closed by the creator.');
+    window.location.href = '/index.html';
+  });
+  socket.on('error', (data) => {
+    alert(data.msg);
+  });
+
+  function addChatMessage(user, message) {
+    const messages = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.textContent = `${user}: ${message}`;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  document.getElementById('send-chat-btn').addEventListener('click', () => {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if (msg === '') return;
+    socket.emit('send_message', { room: roomId, message: msg });
+    input.value = '';
+  });
+
+  document.getElementById('code').addEventListener('input', () => {
+    const code = document.getElementById('code').value;
+    socket.emit('send_code', { room: roomId, code: code });
+  });
+
+  function runCode() {
+    const code = document.getElementById('code').value;
+    const languageId = parseInt(document.getElementById('language').value);
+    const outputBox = document.getElementById('output');
+    outputBox.textContent = '⏳ Running your code...';
+    fetch('https://ce.judge0.com/submissions?base64_encoded=false&wait=true', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        language_id: languageId,
+        source_code: code,
+        stdin: ''
+      }),
+    })
+    .then(res => res.json())
+    .then(data => {
+      outputBox.textContent = data.stdout || data.stderr || data.compile_output || '⚠ No output';
+      socket.emit('send_output', { room: roomId, output: outputBox.textContent });
+    })
+    .catch((e) => {
+      outputBox.textContent = '❌ Error running your code: ' + e.message;
+    });
+  }
+
+  async function checkRoomCreator() {
+    const res = await fetch(`/api/rooms/${roomId}`);
+    if (res.ok) {
+      const room = await res.json();
+      if (room.created_by === currentUserId) {
+        document.getElementById('close-room-btn').style.display = 'inline-block';
+      }
+    }
+  }
+
+  async function init() {
+    await getCurrentUserId();
+    await checkRoomCreator();
+  }
+  init();
+
+  document.getElementById('close-room-btn').addEventListener('click', () => {
+    if (confirm('Are you sure you want to close this room?')) {
+      socket.emit('close_room', { room_id: roomId });
+    }
+  });
+</script>
+
+</body>
+</html>

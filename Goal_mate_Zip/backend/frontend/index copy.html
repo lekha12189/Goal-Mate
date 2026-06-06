@@ -1,0 +1,355 @@
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Features - Ultra Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(0);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .floating-icon {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+        }
+        
+        .stagger-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: stagger-fade 0.8s ease-out forwards;
+        }
+        
+        @keyframes stagger-fade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        .feature-card:nth-child(5) { animation-delay: 0.5s; }
+        .feature-card:nth-child(6) { animation-delay: 0.6s; }
+        
+        .gradient-border {
+            position: relative;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
+            padding: 2px;
+            border-radius: 20px;
+        }
+        
+        .gradient-border-inner {
+            background: #0f0f23;
+            border-radius: 18px;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .morphism-bg {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
+    <!-- Header Include Start -->
+    <header class="backdrop-blur-lg bg-white/10 border-b border-white/20 shadow-lg rounded-b-2xl px-8 py-4 flex items-center justify-between relative z-20">
+      <!-- Left: Logo -->
+      <div class="text-3xl font-extrabold gradient-text tracking-tight">
+        <a href="#" class="flex items-center space-x-2">
+          <img src="../assets/images/GoalMate_Logo.jpg" alt="GoalMate Logo" class="w-10 h-10 rounded-full shadow-md border-2 border-purple-400/60" />
+          <span>GoalMate</span>
+        </a>
+      </div>
+
+      <!-- Hamburger (Mobile) -->
+      <button id="mobile-menu-btn" class="md:hidden flex items-center px-3 py-2 border rounded text-white border-purple-400 hover:bg-purple-500/20 focus:outline-none" aria-label="Open Menu">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <!-- Right: Navigation + Dropdown -->
+      <nav id="main-nav" class="hidden md:flex items-center space-x-8">
+        <a href="#" class="text-lg font-medium hover:text-purple-300 text-white transition-colors">Home</a>
+        <a href="#" class="text-lg font-medium hover:text-purple-300 text-white transition-colors">Join Room</a>
+        <a href="#" class="text-lg font-medium hover:text-purple-300 text-white transition-colors">Create Room</a>
+
+        <!-- Dropdown -->
+        <div class="relative group">
+          <button class="text-lg font-medium hover:text-purple-300 focus:outline-none flex items-center transition-colors">
+            Menu <span class="ml-1">▾</span>
+          </button>
+          <div class="absolute right-0 mt-3 w-48 bg-white/90 text-gray-900 rounded-xl shadow-2xl border border-purple-200/40 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200 z-30 backdrop-blur-md">
+            <a href="#" class="block px-6 py-3 hover:bg-purple-50 rounded-t-xl transition-colors">Account</a>
+            <a href="#" class="block px-6 py-3 hover:bg-purple-50 transition-colors">Goals</a>
+            <a href="#" class="block px-6 py-3 hover:bg-purple-50 transition-colors">Streaks</a>
+            <a href="#" class="block px-6 py-3 hover:bg-purple-50 rounded-b-xl transition-colors">Timeline</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Mobile Menu (hidden by default) -->
+      <div id="mobile-nav" class="md:hidden fixed top-0 left-0 w-full h-full bg-slate-900/95 z-40 flex flex-col items-center justify-center space-y-8 text-center text-white text-xl font-semibold transition-all duration-300 opacity-0 pointer-events-none">
+        <button id="close-mobile-menu" class="absolute top-6 right-8 text-3xl focus:outline-none">&times;</button>
+        <a href="#" class="hover:text-purple-300 transition-colors">Home</a>
+        <a href="#" class="hover:text-purple-300 transition-colors">Join Room</a>
+        <a href="#" class="hover:text-purple-300 transition-colors">Create Room</a>
+        <div class="relative">
+          <button id="mobile-dropdown-btn" class="hover:text-purple-300 focus:outline-none flex items-center transition-colors">Menu <span class="ml-1">▾</span></button>
+          <div id="mobile-dropdown" class="hidden flex-col mt-2 bg-white/90 text-gray-900 rounded-xl shadow-2xl border border-purple-200/40 w-48 mx-auto backdrop-blur-md">
+            <a href="#" class="block px-6 py-3 hover:bg-purple-50 rounded-t-xl transition-colors">Account</a>
+            <a href="#" class="block px-6 py-3 hover:bg-purple-50 transition-colors">Goals</a>
+            <a href="#" class="block px-6 py-3 hover:bg-purple-50 transition-colors">Streaks</a>
+            <a href="#" class="block px-6 py-3 hover:bg-purple-50 rounded-b-xl transition-colors">Timeline</a>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Mobile menu toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileNav = document.getElementById('mobile-nav');
+        const closeBtn = document.getElementById('close-mobile-menu');
+        menuBtn && menuBtn.addEventListener('click', () => {
+          mobileNav.classList.add('opacity-100', 'pointer-events-auto');
+          mobileNav.classList.remove('opacity-0', 'pointer-events-none');
+        });
+        closeBtn && closeBtn.addEventListener('click', () => {
+          mobileNav.classList.remove('opacity-100', 'pointer-events-auto');
+          mobileNav.classList.add('opacity-0', 'pointer-events-none');
+        });
+        // Mobile dropdown toggle
+        const mobileDropdownBtn = document.getElementById('mobile-dropdown-btn');
+        const mobileDropdown = document.getElementById('mobile-dropdown');
+        mobileDropdownBtn && mobileDropdownBtn.addEventListener('click', () => {
+          mobileDropdown.classList.toggle('hidden');
+        });
+      </script>
+    </header>
+    <!-- Header Include End -->
+    <!-- Hero Section Start -->
+    <section class="relative flex items-center justify-start min-h-[60vh] w-full overflow-hidden">
+      <img src="assets/images/BG.jpg" alt="Study Together" class="absolute inset-0 w-full h-full object-cover object-center  z-0" />
+      <div class="relative z-10 max-w-2xl px-6 py-16 text-left ml-0 md:ml-16">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-lg">Study together, <span class="gradient-text">grow together</span></h1>
+        <p class="text-lg md:text-xl text-gray-200 mb-8 font-medium drop-shadow">GoalMate helps you and your friends stay motivated with collaborative learning goals. Set tasks, track progress, and celebrate achievements together!</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-start">
+          <a href="#" class="px-8 py-3 rounded-full text-white font-semibold text-lg shadow-lg hover:from-purple-600 hover:to-pink-600 transition-all">Get Started</a>
+          <a href="#" class="px-8 py-3 rounded-full bg-white/20 border border-white/30 text-white font-semibold text-lg shadow hover:bg-white/30 transition-all backdrop-blur">Learn More</a>
+        </div>
+      </div>
+      <div class="absolute inset-0 bg-gradient-to-b from-slate-900/60 to-purple-900/80 z-1"></div>
+    </section>
+    <!-- Hero Section End -->
+
+    <!-- Background Effects -->
+    <!-- <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse" style="animation-delay: 4s;"></div>
+    </div> -->
+
+    <section class="relative py-24 px-4 max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-20">
+            <div class="inline-block mb-6">
+                <span class="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm font-medium backdrop-blur-sm">
+                    ✨ Features that empower your learning
+                </span>
+            </div>
+          
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                Transform your learning experience with collaborative tools designed for the modern student
+            </p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Collaborative Rooms -->
+            <div class="feature-card stagger-fade gradient-border">
+                <div class="gradient-border-inner p-8 h-full">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center floating-icon pulse-glow">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Collaborative Rooms</h3>
+                    <p class="text-gray-300 leading-relaxed">Create or join study rooms with friends to work on common learning goals and share knowledge in real-time.</p>
+                    <div class="mt-6 flex items-center text-blue-400 font-semibold group cursor-pointer">
+                        <span class="group-hover:text-blue-300 transition-colors">Explore rooms</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goal Setting -->
+            <div class="feature-card stagger-fade gradient-border">
+                <div class="gradient-border-inner p-8 h-full">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center floating-icon">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-ping"></div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Goal Setting</h3>
+                    <p class="text-gray-300 leading-relaxed">Set personal or group goals with deadlines and track your progress over time with intelligent insights.</p>
+                    <div class="mt-6 flex items-center text-emerald-400 font-semibold group cursor-pointer">
+                        <span class="group-hover:text-emerald-300 transition-colors">Set goals</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Streak Tracking -->
+            <div class="feature-card stagger-fade gradient-border">
+                <div class="gradient-border-inner p-8 h-full">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center floating-icon">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex space-x-1">
+                            <div class="w-1 h-1 bg-orange-400 rounded-full animate-pulse"></div>
+                            <div class="w-1 h-1 bg-orange-400 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
+                            <div class="w-1 h-1 bg-orange-400 rounded-full animate-pulse" style="animation-delay: 0.4s;"></div>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Streak Tracking</h3>
+                    <p class="text-gray-300 leading-relaxed">Maintain your study streaks and build consistent learning habits with beautiful visual tracking.</p>
+                    <div class="mt-6 flex items-center text-orange-400 font-semibold group cursor-pointer">
+                        <span class="group-hover:text-orange-300 transition-colors">View streaks</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="feature-card stagger-fade gradient-border">
+                <div class="gradient-border-inner p-8 h-full">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center floating-icon">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <div class="w-3 h-3 bg-yellow-400 rounded-full animate-bounce"></div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Achievements</h3>
+                    <p class="text-gray-300 leading-relaxed">Earn achievements and celebrate milestones with your study partners to stay motivated.</p>
+                    <div class="mt-6 flex items-center text-yellow-400 font-semibold group cursor-pointer">
+                        <span class="group-hover:text-yellow-300 transition-colors">View badges</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline View -->
+            <div class="feature-card stagger-fade gradient-border">
+                <div class="gradient-border-inner p-8 h-full">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center floating-icon">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex flex-col space-y-1">
+                            <div class="w-3 h-0.5 bg-indigo-400 rounded"></div>
+                            <div class="w-2 h-0.5 bg-indigo-400 rounded"></div>
+                            <div class="w-4 h-0.5 bg-indigo-400 rounded"></div>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Timeline View</h3>
+                    <p class="text-gray-300 leading-relaxed">View a chronological timeline of your completed tasks and achievements in a beautiful interface.</p>
+                    <div class="mt-6 flex items-center text-indigo-400 font-semibold group cursor-pointer">
+                        <span class="group-hover:text-indigo-300 transition-colors">Open timeline</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accountability -->
+            <div class="feature-card stagger-fade gradient-border">
+                <div class="gradient-border-inner p-8 h-full">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center floating-icon">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <div class="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></div>
+                            <div class="w-2 h-2 bg-rose-400 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Accountability</h3>
+                    <p class="text-gray-300 leading-relaxed">Stay accountable with your peers and motivate each other to reach your goals together.</p>
+                    <div class="mt-6 flex items-center text-pink-400 font-semibold group cursor-pointer">
+                        <span class="group-hover:text-pink-300 transition-colors">Find partners</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</body>
+</html>
